@@ -1,6 +1,6 @@
 # 🌸 Bloom - Endometriosis Symptom Tracker
 
-A compassionate, data-driven tool for tracking endometriosis symptoms and predicting flare-ups.
+A tool for tracking endometriosis symptoms and predicting flare-ups.
 
 ## Features
 
@@ -20,18 +20,16 @@ A compassionate, data-driven tool for tracking endometriosis symptoms and predic
 - **Hosting**: Vercel (free tier)
 - **Design**: Custom CSS with warm, organic aesthetics
 
-## Setup Instructions
+## Setup
 
-### 1. Create Supabase Project
+### 1. Supabase Project
 
-1. Go to [supabase.com](https://supabase.com) and sign up
-2. Create a new project (choose Johannesburg region for lowest latency)
-3. Wait for database to provision (~2 minutes)
+1. [supabase.com](https://supabase.com)
+2. Europe region (recommended, will change depending on latency)
 
-### 2. Run Database Migration
+### 2. Database Migration
 
-1. In Supabase dashboard, go to **SQL Editor**
-2. Copy and paste this schema:
+1. Database schema:
 
 \`\`\`sql
 -- Create symptom_entries table
@@ -79,18 +77,9 @@ CREATE POLICY "Users can delete own entries"
   USING (auth.uid() = user_id);
 \`\`\`
 
-3. Click **Run**
+### 3. Configure Environment Variables
 
-### 3. Get Supabase Credentials
-
-1. In Supabase dashboard, go to **Settings** → **API**
-2. Copy these values:
-   - Project URL
-   - `anon` public key
-
-### 4. Configure Environment Variables
-
-1. Create a file named `.env.local` in the project root
+1. Created a file named `.env.local` in the project root
 2. Add your Supabase credentials:
 
 \`\`\`bash
@@ -98,29 +87,23 @@ NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 \`\`\`
 
-### 5. Install Dependencies
+### 4. Installed Dependencies and run locally
 
 \`\`\`bash
 npm install
-\`\`\`
-
-### 6. Run Locally
-
-\`\`\`bash
 npm run dev
 \`\`\`
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### 7. Deploy to Vercel
+### 5. Deployed to Vercel
 
-1. Push code to GitHub
-2. Go to [vercel.com](https://vercel.com) and sign up
-3. Click "New Project" → Import from GitHub
+1. Pushed code to GitHub
+2. [vercel.com](https://vercel.com)
 4. Add environment variables (same as `.env.local`)
 5. Deploy!
 
-Your app will be live at `https://your-project.vercel.app`
+Your app will be live at `https://bloom-endo-tracker.vercel.app`
 
 ## Usage
 
@@ -175,13 +158,13 @@ Claude API (Pattern Analysis)
 
 ## Future Enhancements
 
-### Phase 2 (Next Week)
+### Phase 2 
 - [ ] Email reminders for daily logging
 - [ ] PDF export for doctor visits
 - [ ] Cycle overlay on history view
 - [ ] Dark mode
 
-### Phase 3 (Month 2-3)
+### Phase 3 
 - [ ] ML-based flare prediction (PyTorch LSTM)
 - [ ] Personalized treatment recommendations
 - [ ] Medication tracking
@@ -193,6 +176,6 @@ Personal use only. Not for redistribution.
 
 ## Support
 
-Built with ❤️ for Ruvarashe
+Everything, always for you, Ru ❤️
 
-For issues or questions, contact: [your-email]
+For issues or questions, contact: [nyamupakuda@gmail.com]
