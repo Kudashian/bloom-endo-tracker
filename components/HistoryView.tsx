@@ -28,7 +28,7 @@ export default function HistoryView({ entries, onEdit }: Props) {
         <p>No entries yet. Start logging to see your history.</p>
       </div>
     );
-  }
+  
 
   return (
     <div>
@@ -149,4 +149,5 @@ export default function HistoryView({ entries, onEdit }: Props) {
       })}
     </div>
   );
+}
 }
