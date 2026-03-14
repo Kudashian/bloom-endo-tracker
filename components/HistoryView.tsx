@@ -28,7 +28,7 @@ export default function HistoryView({ entries, onEdit }: Props) {
         <p>No entries yet. Start logging to see your history.</p>
       </div>
     );
-  
+  }
 
   return (
     <div>
@@ -75,7 +75,24 @@ export default function HistoryView({ entries, onEdit }: Props) {
                   day: 'numeric' 
                 })}
               </span>
+              
+              <button
+                onClick={() => onEdit(entry)}
+                style={{
+                  background: 'none',
+                  border: '1px solid #c47a9b',
+                  color: '#c47a9b',
+                  borderRadius: 8,
+                  padding: '4px 12px',
+                  fontSize: 11,
+                  cursor: 'pointer',
+                  fontFamily: "'DM Sans', sans-serif"
+                }}
+              >
+                Edit
+              </button>
             </div>
+            
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               {SYMPTOMS.map((symptom) => {
                 const value = entry[symptom.id as keyof SymptomEntry] as number;
@@ -96,33 +113,8 @@ export default function HistoryView({ entries, onEdit }: Props) {
                   </div>
                 );
               })}
-            <div style={{ 
-                display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center', 
-              marginBottom: 12 
-            }}>
-              <span style={{ /* date styling */ }}>
-                {date.toLocaleDateString(...)}
-              </span>
-              
-              <button
-                onClick={() => onEdit(entry)}
-                style={{
-                  background: 'none',
-                  border: '1px solid #c47a9b',
-                  color: '#c47a9b',
-                  borderRadius: 8,
-                  padding: '4px 12px',
-                  fontSize: 11,
-                  cursor: 'pointer',
-                  fontFamily: "'DM Sans', sans-serif"
-                }}
-              >
-                Edit
-              </button>
-            </div>  
             </div>
+            
             {entry.triggers && entry.triggers.length > 0 && (
               <div style={{ 
                 marginTop: 10, 
@@ -149,5 +141,4 @@ export default function HistoryView({ entries, onEdit }: Props) {
       })}
     </div>
   );
-}
 }

@@ -18,6 +18,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase/client';
+import { SymptomEntry } from '@/lib/types';
 
 const SYMPTOMS = [
   { id: 'pain_level', label: 'Pelvic Pain', icon: '⚡', color: '#e07c7c' },
@@ -34,7 +35,7 @@ interface Props {
   editingEntry?: SymptomEntry | null;  // If editingEntry is provided, we pre-fill the form for editing
 }
 
-export default function LogView({ onSave }: Props) {
+export default function LogView({ onSave, editingEntry }: Props) {
   // STATE: All the form data
   const [symptoms, setSymptoms] = useState({
     pain_level: 1,
@@ -49,20 +50,20 @@ export default function LogView({ onSave }: Props) {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-  if (editingEntry) {
-    // Populate form with editing entry's data
-    setSymptoms({
-      pain_level: editingEntry.pain_level,
-      fatigue_level: editingEntry.fatigue_level,
-      bloating_level: editingEntry.bloating_level,
-      mood_level: editingEntry.mood_level,
-      nausea_level: editingEntry.nausea_level,
-    });
-    setBleeding(editingEntry.bleeding_level);
-    setTriggers(editingEntry.triggers || []);
-    setNotes(editingEntry.notes || '');
-  }
-}, [editingEntry]);
+    if (editingEntry) {
+      // Populate form with editing entry's data
+      setSymptoms({
+        pain_level: editingEntry.pain_level,
+        fatigue_level: editingEntry.fatigue_level,
+        bloating_level: editingEntry.bloating_level,
+        mood_level: editingEntry.mood_level,
+        nausea_level: editingEntry.nausea_level,
+      });
+      setBleeding(editingEntry.bleeding_level);
+      setTriggers(editingEntry.triggers || []);
+      setNotes(editingEntry.notes || '');
+    }
+  }, [editingEntry]);
 
   // Toggle trigger on/off
   const toggleTrigger = (trigger: string) => {

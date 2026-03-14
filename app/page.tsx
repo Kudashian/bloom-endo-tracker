@@ -129,25 +129,25 @@ export default function TrackerPage() {
           boxShadow: '0 8px 40px rgba(100,60,140,0.1)',
           border: '1px solid rgba(200,180,240,0.3)',
         }}>
-        {/* Conditional rendering based on current view */}
+          {/* Conditional rendering based on current view */}
           {view === 'log' && (
-        <LogView 
-          onSave={() => {
-            loadEntries();
-            setEditingEntry(null);  // Clear editing state after save
-          }} 
-          editingEntry={editingEntry}
-        />
-)}
+            <LogView 
+              onSave={() => {
+                loadEntries();
+                setEditingEntry(null);  // Clear editing state after save
+              }} 
+              editingEntry={editingEntry}
+            />
+          )}
           {view === 'history' && (
             <HistoryView 
-            entries={entries} 
-            onEdit={(entry) => {
-            setEditingEntry(entry);
-            setView('log');
-    }}
-  />
-)}
+              entries={entries} 
+              onEdit={(entry) => {
+                setEditingEntry(entry);
+                setView('log');
+              }}
+            />
+          )}
           {view === 'insights' && <InsightsView entries={entries} />}
         </div>
       </div>
@@ -249,10 +249,10 @@ function LoginScreen() {
           textAlign: 'center', 
           marginTop: 32, 
           color: '#aaa', 
-          fontSize: 14,
+          fontSize: 12,
           fontFamily: "'DM Sans', sans-serif"
         }}>
-          Everyting, Always for Ru 🦋
+          Everything, Always for Ru 🦋
         </p>  
       </div>
     </div>
