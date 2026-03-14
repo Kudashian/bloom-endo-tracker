@@ -16,7 +16,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase/client';
 
 const SYMPTOMS = [
@@ -31,6 +31,7 @@ const TRIGGERS = ['Stress', 'Poor Sleep', 'Certain Foods', 'Exercise', 'Hormonal
 
 interface Props {
   onSave: () => void;  // Callback function when save succeeds
+  editingEntry?: SymptomEntry | null;  // If editingEntry is provided, we pre-fill the form for editing
 }
 
 export default function LogView({ onSave }: Props) {
@@ -46,6 +47,22 @@ export default function LogView({ onSave }: Props) {
   const [triggers, setTriggers] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+  if (editingEntry) {
+    // Populate form with editing entry's data
+    setSymptoms({
+      pain_level: editingEntry.pain_level,
+      fatigue_level: editingEntry.fatigue_level,
+      bloating_level: editingEntry.bloating_level,
+      mood_level: editingEntry.mood_level,
+      nausea_level: editingEntry.nausea_level,
+    });
+    setBleeding(editingEntry.bleeding_level);
+    setTriggers(editingEntry.triggers || []);
+    setNotes(editingEntry.notes || '');
+  }
+}, [editingEntry]);
 
   // Toggle trigger on/off
   const toggleTrigger = (trigger: string) => {
@@ -241,7 +258,7 @@ export default function LogView({ onSave }: Props) {
           letterSpacing: 0.3,
         }}
       >
-        {saving ? 'Saving...' : "Save Today's Log"}
+        {saving ? 'Saving...' : editingEntry ? 'Update Entry' : "Save Today's Log"}
       </button>
     </div>
   );

@@ -33,6 +33,7 @@ export default function TrackerPage() {
   const [entries, setEntries] = useState<SymptomEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const [editingEntry, setEditingEntry] = useState<SymptomEntry | null>(null);
 
   // EFFECT: Run once when component loads
   useEffect(() => {
@@ -115,7 +116,7 @@ export default function TrackerPage() {
             fontSize: 13, 
             margin: 0 
           }}>
-            Hi {user.email}! 👋
+            Hi {user?.email}! 👋
           </p>
         </div>
 
@@ -128,9 +129,25 @@ export default function TrackerPage() {
           boxShadow: '0 8px 40px rgba(100,60,140,0.1)',
           border: '1px solid rgba(200,180,240,0.3)',
         }}>
-          {/* Conditional rendering based on current view */}
-          {view === 'log' && <LogView onSave={loadEntries} />}
-          {view === 'history' && <HistoryView entries={entries} />}
+        {/* Conditional rendering based on current view */}
+          {view === 'log' && (
+        <LogView 
+          onSave={() => {
+            loadEntries();
+            setEditingEntry(null);  // Clear editing state after save
+          }} 
+          editingEntry={editingEntry}
+        />
+)}
+          {view === 'history' && (
+            <HistoryView 
+            entries={entries} 
+            onEdit={(entry) => {
+            setEditingEntry(entry);
+            setView('log');
+    }}
+  />
+)}
           {view === 'insights' && <InsightsView entries={entries} />}
         </div>
       </div>
@@ -228,6 +245,15 @@ function LoginScreen() {
             </button>
           </form>
         )}
+        <p style={{ 
+          textAlign: 'center', 
+          marginTop: 32, 
+          color: '#aaa', 
+          fontSize: 14,
+          fontFamily: "'DM Sans', sans-serif"
+        }}>
+          Everyting, Always for Ru 🦋
+        </p>  
       </div>
     </div>
   );

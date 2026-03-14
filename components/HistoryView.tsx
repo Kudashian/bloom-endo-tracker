@@ -12,9 +12,10 @@ const SYMPTOMS = [
 
 interface Props {
   entries: SymptomEntry[];
+  onEdit: (entry: SymptomEntry) => void;
 }
 
-export default function HistoryView({ entries }: Props) {
+export default function HistoryView({ entries, onEdit }: Props) {
   if (!entries.length) {
     return (
       <div style={{ 
@@ -95,6 +96,32 @@ export default function HistoryView({ entries }: Props) {
                   </div>
                 );
               })}
+            <div style={{ 
+                display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center', 
+              marginBottom: 12 
+            }}>
+              <span style={{ /* date styling */ }}>
+                {date.toLocaleDateString(...)}
+              </span>
+              
+              <button
+                onClick={() => onEdit(entry)}
+                style={{
+                  background: 'none',
+                  border: '1px solid #c47a9b',
+                  color: '#c47a9b',
+                  borderRadius: 8,
+                  padding: '4px 12px',
+                  fontSize: 11,
+                  cursor: 'pointer',
+                  fontFamily: "'DM Sans', sans-serif"
+                }}
+              >
+                Edit
+              </button>
+            </div>  
             </div>
             {entry.triggers && entry.triggers.length > 0 && (
               <div style={{ 
