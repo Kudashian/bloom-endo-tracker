@@ -87,6 +87,17 @@ NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 \`\`\`
 
+For the daily keep-alive + reminder cron (`/api/daily-check`), also set these (Vercel dashboard only — never commit them):
+
+\`\`\`bash
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
+RESEND_API_KEY=your-resend-api-key-here
+RUVARASHE_EMAIL=recipient@example.com
+CRON_SECRET=a-random-secret-string
+\`\`\`
+
+`CRON_SECRET` is a value you make up yourself; Vercel Cron automatically sends it as a Bearer token on scheduled requests, and the route checks it to reject unauthorized callers.
+
 ### 4. Installed Dependencies and run locally
 
 \`\`\`bash
@@ -104,6 +115,10 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 5. Deploy!
 
 Your app will be live at `https://bloom-endo-tracker.vercel.app`
+
+### 6. Daily keep-alive & reminder cron
+
+`vercel.json` schedules Vercel Cron to hit `/api/daily-check` once a day (18:00 UTC / 20:00 SAST). This query keeps the Supabase free-tier project from being paused for inactivity, and emails a gentle reminder via Resend if no entry was logged yet that day. Make sure the environment variables from Step 3 are set in Vercel before deploying, and add the "Cron Jobs" feature under your Vercel project (enabled by default when `vercel.json` defines `crons`).
 
 ## Usage
 
