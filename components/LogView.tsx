@@ -30,12 +30,22 @@ const SYMPTOMS = [
 
 const TRIGGERS = ['Stress', 'Poor Sleep', 'Certain Foods', 'Exercise', 'Hormonal', 'Unknown'];
 
+// Parses "YYYY-MM-DD" as a local date instead of UTC midnight, avoiding an
+// off-by-one day shift in negative UTC-offset timezones.
+function parseDateStr(dateStr: string): Date {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  return new Date(year, month - 1, day);
+}
+
 interface Props {
   onSave: () => void;  // Callback function when save succeeds
   editingEntry?: SymptomEntry | null;  // If editingEntry is provided, we pre-fill the form for editing
+  targetDate?: string;  // When backfilling a missed day, the date to log for (defaults to today)
 }
 
-export default function LogView({ onSave, editingEntry }: Props) {
+export default function LogView({ onSave, editingEntry, targetDate }: Props) {
+  const todayStr = new Date().toISOString().split('T')[0];
+  const activeDate = editingEntry?.entry_date ?? targetDate ?? todayStr;
   // STATE: All the form data
   const [symptoms, setSymptoms] = useState({
     pain_level: 1,
@@ -62,8 +72,20 @@ export default function LogView({ onSave, editingEntry }: Props) {
       setBleeding(editingEntry.bleeding_level);
       setTriggers(editingEntry.triggers || []);
       setNotes(editingEntry.notes || '');
+    } else {
+      // No existing entry for this date (today, or a missed day being backfilled) — reset to defaults
+      setSymptoms({
+        pain_level: 1,
+        fatigue_level: 1,
+        bloating_level: 1,
+        mood_level: 5,
+        nausea_level: 1,
+      });
+      setBleeding('none');
+      setTriggers([]);
+      setNotes('');
     }
-  }, [editingEntry]);
+  }, [editingEntry, targetDate]);
 
   // Toggle trigger on/off
   const toggleTrigger = (trigger: string) => {
@@ -79,7 +101,7 @@ export default function LogView({ onSave, editingEntry }: Props) {
     setSaving(true);
     
     const entry = {
-      entry_date: new Date().toISOString().split('T')[0],  // Today's date: "2025-02-17"
+      entry_date: activeDate,
       ...symptoms,
       bleeding_level: bleeding,
       triggers,
@@ -118,11 +140,24 @@ export default function LogView({ onSave, editingEntry }: Props) {
           fontSize: 14, 
           margin: 0 
         }}>
-          {new Date().toLocaleDateString('en-US', { 
-            weekday: 'long', 
-            month: 'long', 
-            day: 'numeric' 
+          {parseDateStr(activeDate).toLocaleDateString('en-US', {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric'
           })}
+          {activeDate !== todayStr && (
+            <span style={{
+              marginLeft: 8,
+              background: '#f7eaf2',
+              color: '#c47a9b',
+              borderRadius: 8,
+              padding: '2px 8px',
+              fontSize: 11,
+              fontWeight: 600,
+            }}>
+              Backfilling
+            </span>
+          )}
         </p>
       </div>
 
@@ -259,7 +294,13 @@ export default function LogView({ onSave, editingEntry }: Props) {
           letterSpacing: 0.3,
         }}
       >
-        {saving ? 'Saving...' : editingEntry ? 'Update Entry' : "Save Today's Log"}
+        {saving
+          ? 'Saving...'
+          : editingEntry
+          ? 'Update Entry'
+          : activeDate === todayStr
+          ? "Save Today's Log"
+          : 'Save Backfilled Entry'}
       </button>
     </div>
   );

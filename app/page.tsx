@@ -26,14 +26,16 @@ import { SymptomEntry } from '@/lib/types';
 import LogView from '@/components/LogView';
 import HistoryView from '@/components/HistoryView';
 import InsightsView from '@/components/InsightsView';
+import CalendarView from '@/components/CalendarView';
 
 export default function TrackerPage() {
   // STATE: Data that changes and triggers re-renders
-  const [view, setView] = useState<'log' | 'history' | 'insights'>('log');
+  const [view, setView] = useState<'log' | 'history' | 'insights' | 'backfill'>('log');
   const [entries, setEntries] = useState<SymptomEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
   const [editingEntry, setEditingEntry] = useState<SymptomEntry | null>(null);
+  const [targetDate, setTargetDate] = useState<string | undefined>(undefined);
 
   // EFFECT: Run once when component loads
   useEffect(() => {
@@ -131,24 +133,37 @@ export default function TrackerPage() {
         }}>
           {/* Conditional rendering based on current view */}
           {view === 'log' && (
-            <LogView 
+            <LogView
               onSave={() => {
                 loadEntries();
                 setEditingEntry(null);  // Clear editing state after save
-              }} 
+                setTargetDate(undefined);
+              }}
               editingEntry={editingEntry}
+              targetDate={targetDate}
             />
           )}
           {view === 'history' && (
-            <HistoryView 
-              entries={entries} 
+            <HistoryView
+              entries={entries}
               onEdit={(entry) => {
                 setEditingEntry(entry);
+                setTargetDate(undefined);
                 setView('log');
               }}
             />
           )}
           {view === 'insights' && <InsightsView entries={entries} />}
+          {view === 'backfill' && (
+            <CalendarView
+              entries={entries}
+              onSelectDate={(date, existingEntry) => {
+                setEditingEntry(existingEntry);
+                setTargetDate(date);
+                setView('log');
+              }}
+            />
+          )}
         </div>
       </div>
 
@@ -260,16 +275,17 @@ function LoginScreen() {
 }
 
 // Bottom navigation tabs
-function BottomNav({ 
-  view, 
-  setView 
-}: { 
-  view: string; 
-  setView: (v: 'log' | 'history' | 'insights') => void 
+function BottomNav({
+  view,
+  setView
+}: {
+  view: string;
+  setView: (v: 'log' | 'history' | 'insights' | 'backfill') => void
 }) {
   const tabs = [
     { id: 'log' as const, icon: '📝', label: 'Log' },
     { id: 'history' as const, icon: '📋', label: 'History' },
+    { id: 'backfill' as const, icon: '📅', label: 'Backfill' },
     { id: 'insights' as const, icon: '✨', label: 'Insights' },
   ];
 
